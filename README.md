@@ -127,3 +127,47 @@
    - 신청 이력 DB에 저장
    - 신청 성공 응답 반환
 1. 응답 수신 후, 신청 완료 메시지 표시
+
+---
+
+# ERD
+
+```mermaid
+---
+title : ERDiagram (PostgreSQL)
+---
+erDiagram
+    USER ||--o{ APPLICATION : "applies"
+    MCLASS ||--o{ APPLICATION : "receives"
+    USER ||--o{ MCLASS : "hosts"
+
+    USER {
+        bigint user_id PK
+        varchar email
+        varchar password
+        boolean is_host
+        enum role
+        timestamptz created_at
+    }
+
+    MCLASS {
+        bigint mclass_id PK
+        bigint user_id FK
+        varchar title
+        text description
+        integer capacity
+        timestamptz apply_deadline
+        timestamptz start_date
+        timestamptz end_date
+        boolean deleted
+        timestamptz created_at
+    }
+
+    APPLICATION {
+        bigint application_id PK
+        bigint user_id FK
+        bigint mclass_id FK
+        enum status
+        timestamptz created_at
+    }
+```
