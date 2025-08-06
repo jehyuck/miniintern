@@ -137,37 +137,38 @@
 title : ERDiagram (PostgreSQL)
 ---
 erDiagram
-    USER ||--o{ APPLICATION : "applies"
-    MCLASS ||--o{ APPLICATION : "receives"
-    USER ||--o{ MCLASS : "hosts"
+   direction LR
+   USER ||--o{ APPLICATION : "applies"
+   MCLASS ||--o{ APPLICATION : "receives"
+   USER ||--o{ MCLASS : "hosts"
 
-    USER {
-        bigint user_id PK
-        varchar email
-        varchar password
-        boolean is_host
-        enum role
-        timestamptz created_at
-    }
+   USER {
+      bigint user_id PK
+      varchar email "NOT NULL UNIQUE"
+      varchar password "NOT NULL"
+      boolean is_host
+      varchar role "NOT NULL DEFAULT 'USER'"
+      timestamptz created_at "NOT NULL"
+   }
 
-    MCLASS {
-        bigint mclass_id PK
-        bigint user_id FK
-        varchar title
-        text description
-        integer capacity
-        timestamptz apply_deadline
-        timestamptz start_date
-        timestamptz end_date
-        boolean deleted
-        timestamptz created_at
-    }
+   MCLASS {
+      bigint mclass_id PK
+      bigint user_id FK "NOT NULL (host)"
+      varchar title "NOT NULL"
+      text description
+      integer capacity "NOT NULL"
+      timestamptz apply_deadline "NOT NULL"
+      timestamptz start_date "NOT NULL"
+      timestamptz end_date "NOT NULL"
+      boolean deleted "NOT NULL DEFAULT false"
+      timestamptz created_at "NOT NULL"
+   }
 
-    APPLICATION {
-        bigint application_id PK
-        bigint user_id FK
-        bigint mclass_id FK
-        enum status
-        timestamptz created_at
-    }
+   APPLICATION {
+      bigint application_id PK
+      bigint user_id FK
+      bigint mclass_id FK
+      varchar status "NOT NULL"
+      timestamptz created_at "NOT NULL"
+   }
 ```
