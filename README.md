@@ -201,3 +201,11 @@ erDiagram
 | 클래스 상세 조회 | GET    | `/api/mclass/{mclassId}` | ❌          | path: `mclassId`                                                                                                                 | 클래스 상세정보              |
 | 클래스 수정      | PATCH  | `/api/mclass/{mclassId}` | ✅ (호스트) | path: `mclassId`<br>body: { `title` , `description` , `capacity` , `applyDeadline` , `startDate` , `endDate` } _(모두 optional)_ | 수정된 mclassId              |
 | 클래스 삭제      | DELETE | `/api/mclass/{mclassId}` | ✅ (호스트) | path: `mclassId`                                                                                                                 | 삭제 성공 여부 (Soft Delete) |
+
+## application
+
+| 기능              | 메서드 | 경로                                  | 인증 | 요청 데이터                                                                         | 응답 필드      |
+| ----------------- | ------ | ------------------------------------- | ---- | ----------------------------------------------------------------------------------- | -------------- |
+| 클래스 신청       | POST   | `/api/mclass/{mclassId}/applications` | ✅   | path: `mclassId`                                                                    | 신청 성공 여부 |
+| 내 신청 내역 조회 | GET    | `/api/users/me/applications`          | ✅   | query: `status` _(optional)_ <br>예: `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED` | 신청 목록      |
+| 신청 취소 (선택)  | DELETE | `/api/mclass/{mclassId}/applications` | ✅   | path: `mclassId`                                                                    | 취소 성공 여부 |
