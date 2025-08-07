@@ -172,3 +172,40 @@ erDiagram
       timestamptz created_at "NOT NULL"
    }
 ```
+
+<br/>
+
+---
+
+# API 명세서
+
+## user
+
+| 기능               | 메서드 | 경로                      | 인증               | 요청 데이터                                         | 응답 필드                 |
+| ------------------ | ------ | ------------------------- | ------------------ | --------------------------------------------------- | ------------------------- |
+| 회원가입           | POST   | `/api/users`              | ❌                 | body: { **email**, **password** } _(모두 필수)_     | userId                    |
+| 내 정보 조회       | GET    | `/api/users/me`           | ✅                 | 없음                                                | 유저 정보                 |
+| 내 정보 수정       | PATCH  | `/api/users/me`           | ✅                 | body: { email _(optional)_, password _(optional)_ } | 수정 성공 여부            |
+| 회원 탈퇴          | DELETE | `/api/users/me`           | ✅                 | 없음                                                | 삭제 성공 여부            |
+| 호스트 등록        | POST   | `/api/users/me/host`      | ✅                 | 없음                                                | isHost = true             |
+| 로그인 (토큰 발급) | POST   | `/api/auth/token`         | ❌                 | body: { **email**, **password** } _(필수)_          | accessToken, refreshToken |
+| 토큰 재발급        | POST   | `/api/auth/token/refresh` | ✅ (Refresh Token) | Header: `Authorization: Bearer {refreshToken}`      | accessToken               |
+| 로그아웃           | DELETE | `/api/auth/token`         | ✅ (Access Token)  | Header: `Authorization: Bearer {accessToken}`       | 로그아웃 메시지           |
+
+## Mclass
+
+| 기능             | 메서드 | 경로                     | 인증        | 요청 데이터                                                                                                                      | 응답 필드                    |
+| ---------------- | ------ | ------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| 클래스 생성      | POST   | `/api/mclass`            | ✅ (호스트) | body: { **title**, **description**, **capacity**, **applyDeadline**, **startDate**, **endDate** } _(모두 필수)_                  | mclassId                     |
+| 클래스 목록 조회 | GET    | `/api/mclass`            | ❌          | query: `page` _(optional)_, `size` _(optional)_                                                                                  | 클래스 리스트 (페이징)       |
+| 클래스 상세 조회 | GET    | `/api/mclass/{mclassId}` | ❌          | path: `mclassId`                                                                                                                 | 클래스 상세정보              |
+| 클래스 수정      | PATCH  | `/api/mclass/{mclassId}` | ✅ (호스트) | path: `mclassId`<br>body: { `title` , `description` , `capacity` , `applyDeadline` , `startDate` , `endDate` } _(모두 optional)_ | 수정된 mclassId              |
+| 클래스 삭제      | DELETE | `/api/mclass/{mclassId}` | ✅ (호스트) | path: `mclassId`                                                                                                                 | 삭제 성공 여부 (Soft Delete) |
+
+## application
+
+| 기능              | 메서드 | 경로                                  | 인증 | 요청 데이터                                                                         | 응답 필드      |
+| ----------------- | ------ | ------------------------------------- | ---- | ----------------------------------------------------------------------------------- | -------------- |
+| 클래스 신청       | POST   | `/api/mclass/{mclassId}/applications` | ✅   | path: `mclassId`                                                                    | 신청 성공 여부 |
+| 내 신청 내역 조회 | GET    | `/api/users/me/applications`          | ✅   | query: `status` _(optional)_ <br>예: `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED` | 신청 목록      |
+| 신청 취소 (선택)  | DELETE | `/api/mclass/{mclassId}/applications` | ✅   | path: `mclassId`                                                                    | 취소 성공 여부 |
