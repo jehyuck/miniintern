@@ -172,3 +172,22 @@ erDiagram
       timestamptz created_at "NOT NULL"
    }
 ```
+
+<br/>
+
+---
+
+# API 명세서
+
+## user
+
+| 기능               | 메서드 | 경로                      | 인증               | 요청 데이터                                         | 응답 필드                 |
+| ------------------ | ------ | ------------------------- | ------------------ | --------------------------------------------------- | ------------------------- |
+| 회원가입           | POST   | `/api/users`              | ❌                 | body: { **email**, **password** } _(모두 필수)_     | userId                    |
+| 내 정보 조회       | GET    | `/api/users/me`           | ✅                 | 없음                                                | 유저 정보                 |
+| 내 정보 수정       | PATCH  | `/api/users/me`           | ✅                 | body: { email _(optional)_, password _(optional)_ } | 수정 성공 여부            |
+| 회원 탈퇴          | DELETE | `/api/users/me`           | ✅                 | 없음                                                | 삭제 성공 여부            |
+| 호스트 등록        | POST   | `/api/users/me/host`      | ✅                 | 없음                                                | isHost = true             |
+| 로그인 (토큰 발급) | POST   | `/api/auth/token`         | ❌                 | body: { **email**, **password** } _(필수)_          | accessToken, refreshToken |
+| 토큰 재발급        | POST   | `/api/auth/token/refresh` | ✅ (Refresh Token) | Header: `Authorization: Bearer {refreshToken}`      | accessToken               |
+| 로그아웃           | DELETE | `/api/auth/token`         | ✅ (Access Token)  | Header: `Authorization: Bearer {accessToken}`       | 로그아웃 메시지           |
