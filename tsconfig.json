@@ -35,7 +35,7 @@
     "skipLibCheck": true,
 
     /* Debugging */
-    "sourceMap": true,
+    "sourceMap": true
     // "jsx": "react-jsx",
     // "verbatimModuleSyntax": true,
     // "isolatedModules": true,
