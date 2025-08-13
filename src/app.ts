@@ -16,6 +16,7 @@ export function createApp(): express.Express {
   if (swaggerSpec) {
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
-  app.get('/health', healthRouter);
+  app.use('/health', healthRouter);
+
   return app;
 }
