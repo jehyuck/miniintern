@@ -12,7 +12,7 @@
     "lib": ["ES2020"],
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     // Other Outputs
     // "declaration": true,
