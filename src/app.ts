@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { healthRouter } from './routes/health';
+import { usersRouter } from './routes/users';
 
 let swaggerSpec: any | undefined;
 try {
@@ -18,5 +19,6 @@ export function createApp(): express.Express {
   }
   app.use('/health', healthRouter);
 
+  app.use('/users', usersRouter);
   return app;
 }
