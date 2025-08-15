@@ -9,4 +9,6 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['text', 'lcov', 'html'],
   moduleFileExtensions: ['ts', 'js', 'json'],
+  setupFiles: ['<rootDir>\\test\\setting\\load-env.ts'],
+  setupFilesAfterEnv: ['<rootDir>\\test\\setting\\jest.setup.ts'],
 };

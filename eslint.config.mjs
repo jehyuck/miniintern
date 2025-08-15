@@ -32,9 +32,8 @@ export default [
       ],
       'prefer-const': 'error',
       eqeqeq: ['error', 'smart'],
-      curly: ['error', 'all'],
+      curly: ['error', 'multi-line'],
       'no-console': 'warn',
-
       // TS 스타일
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/no-explicit-any': 'off', // 초기 편의, 필요시 'warn'
