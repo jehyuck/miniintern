@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { healthRouter } from './routes/health';
 import { usersRouter } from './routes/users';
+import { errorHandler } from './errors/errorHandler';
 
 let swaggerSpec: any | undefined;
 try {
@@ -20,5 +21,7 @@ export function createApp(): express.Express {
   app.use('/health', healthRouter);
 
   app.use('/users', usersRouter);
+
+  app.use(errorHandler);
   return app;
 }
