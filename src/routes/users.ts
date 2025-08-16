@@ -59,12 +59,14 @@ usersRouter.delete('/me', authGuard, async (req, res) => {
  *     tags: [Users]
  *     summary: 호스트 신청
  *     responses:
- *       '200':
- *         description: OK
+ *       '204':
+ *         $ref: '#/components/responses/UsersApplyHost'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest'
+ *       '401':
+ *         $ref: '#/components/responses/Auth_Unauthorized'
  */
-usersRouter.post('/me/host', authGuard, async (req, res) => {
-  throw AppError.notImplemented();
-});
+usersRouter.post('/me/host', authGuard, usersController.applyHost);
 
 /**
  * @openapi

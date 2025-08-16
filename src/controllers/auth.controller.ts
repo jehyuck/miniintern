@@ -6,7 +6,7 @@ import type { CookieOptions } from 'express';
 import { DEFAULT_REFRESH_EXPIRES_IN } from '../lib/jwt';
 
 export const refreshCookieName = 'refreshToken';
-const refreshCookieOpts: CookieOptions = {
+export const refreshCookieOpts: CookieOptions = {
   httpOnly: true,
   secure: false,
   sameSite: 'lax',
