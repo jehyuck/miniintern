@@ -10,30 +10,12 @@ export const usersRouter = Router();
  *   post:
  *     tags: [Users]
  *     summary: 회원가입
- *     security: []
  *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [email, password]
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 minLength: 6
+ *       $ref: '#/components/requestBodies/UserSignUp'
  *     responses:
- *       '201':
- *         description: Created (userId 반환)
- *       '400':
- *         description: 잘못된 요청(필수값 누락 등)
- *       '409':
- *         description: 이미 존재하는 이메일
- *       '500':
- *         description: 서버 에러
+ *       201: { $ref: '#/components/responses/UserCreated' }
+ *       400: { $ref: '#/components/responses/BadRequest' }
+ *       409: { $ref: '#/components/responses/Conflict' }
  */
 usersRouter.post('/', usersController.signup);
 
