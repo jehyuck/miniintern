@@ -4,6 +4,7 @@ import { healthRouter } from './routes/health';
 import { usersRouter } from './routes/users';
 import { errorHandler } from './errors/errorHandler';
 import { authRouter } from './routes/auth';
+import { pgErrorTranslator } from './middlewares/pgErrorTranlator';
 
 let swaggerSpec: any | undefined;
 try {
@@ -25,6 +26,7 @@ export function createApp(): express.Express {
 
   app.use('/users', usersRouter);
 
+  app.use(pgErrorTranslator);
   app.use(errorHandler);
   return app;
 }
