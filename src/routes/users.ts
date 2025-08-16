@@ -1,10 +1,6 @@
-import { ok } from '../utils/response';
 import { Router } from 'express';
-import type { Request, Response } from 'express';
 import { AppError } from '../errors/appError';
-import { db } from '../db';
-import { users } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { usersController } from '../controllers/users.controller';
 
 export const usersRouter = Router();
 
@@ -39,26 +35,7 @@ export const usersRouter = Router();
  *       '500':
  *         description: 서버 에러
  */
-usersRouter.post('/', async (req: Request, res: Response) => {
-  const { email, password } = (req.body ?? {}) as { email?: string; password?: string };
-
-  if (!email || !password) {
-    throw AppError.badRequest();
-  }
-
-  const dup = await db.select().from(users).where(eq(users.email, email)).limit(1);
-  if (dup.length) {
-    throw AppError.conflict();
-  }
-
-  // insert (해시는 추후)
-  const inserted = await db
-    .insert(users)
-    .values({ email, password })
-    .returning({ userId: users.userId });
-
-  return res.status(201).json(ok<{ userId: number }>({ userId: inserted[0].userId }));
-});
+usersRouter.post('/', usersController.signup);
 
 /**
  * @openapi
