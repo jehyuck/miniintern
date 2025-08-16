@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import { healthRouter } from './routes/health';
 import { usersRouter } from './routes/users';
 import { errorHandler } from './errors/errorHandler';
+import { authRouter } from './routes/auth';
 
 let swaggerSpec: any | undefined;
 try {
@@ -19,6 +20,8 @@ export function createApp(): express.Express {
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
   app.use('/health', healthRouter);
+
+  app.use('/auth', authRouter);
 
   app.use('/users', usersRouter);
 
