@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { AppError } from '../errors/appError';
 import { usersController } from '../controllers/users.controller';
+import { authGuard } from '../lib/auth';
 
 export const usersRouter = Router();
 
@@ -25,14 +26,17 @@ usersRouter.post('/', usersController.signup);
  *   patch:
  *     tags: [Users]
  *     summary: 회원수정
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/UserPasswordUpdate'
  *     responses:
- *       '200':
- *         description: OK
- *
+ *       '204':
+ *         $ref: '#/components/responses/UsersPatchMe'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest'
+ *       '401':
+ *         $ref: '#/components/responses/Auth_Unauthorized'
  */
-usersRouter.patch('/me', async (req, res) => {
-  throw AppError.notImplemented();
-});
+usersRouter.patch('/me', authGuard, usersController.patchMe);
 
 /**
  * @openapi
@@ -44,7 +48,7 @@ usersRouter.patch('/me', async (req, res) => {
  *       '200':
  *         description: OK
  */
-usersRouter.delete('/me', async (req, res) => {
+usersRouter.delete('/me', authGuard, async (req, res) => {
   throw AppError.notImplemented();
 });
 
@@ -58,7 +62,7 @@ usersRouter.delete('/me', async (req, res) => {
  *       '200':
  *         description: OK
  */
-usersRouter.post('/me/host', async (req, res) => {
+usersRouter.post('/me/host', authGuard, async (req, res) => {
   throw AppError.notImplemented();
 });
 
@@ -72,6 +76,6 @@ usersRouter.post('/me/host', async (req, res) => {
  *       '200':
  *         description: OK
  */
-usersRouter.get('/me', async (req, res) => {
+usersRouter.get('/me', authGuard, async (req, res) => {
   throw AppError.notImplemented();
 });

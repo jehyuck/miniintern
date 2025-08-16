@@ -8,3 +8,5 @@ export type UserSignupReqDto = {
 export type UserCreatedRes = {
   userId: number;
 };
+
+export type UserPatchReqDto = { currentPassword?: string; newPassword?: string };

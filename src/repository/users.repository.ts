@@ -20,6 +20,19 @@ export const UserRepository = {
       columns: { userId: true, email: true, password: true, role: true },
     });
   },
+  findById(ex: Executor, userId: number) {
+    return ex.query.users.findFirst({
+      where: eq(users.userId, userId),
+      columns: { userId: true, email: true, password: true },
+    });
+  },
+  updatePassword(ex: any, userId: number, hashed: string) {
+    return ex
+      .update(users)
+      .set({ password: hashed })
+      .where(eq(users.userId, userId))
+      .returning({ userId: users.userId });
+  },
   create(ex: Executor, email: string, hashedPassword: string) {
     return ex
       .insert(users)
