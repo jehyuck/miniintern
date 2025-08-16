@@ -1,6 +1,8 @@
 import { db } from '../db';
 import { users } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
+
+type UserRow = typeof users.$inferSelect;
 
 export const UserRepository = {
   findById(userId: number) {
@@ -11,5 +13,17 @@ export const UserRepository = {
   },
   create(email: string, password: string) {
     return db.insert(users).values({ email, password }).returning({ userId: users.userId });
+  },
+  login(email: string, password: string): Promise<UserRow | undefined> {
+    return db.query.users.findFirst({
+      where: and(eq(users.email, email), eq(users.password, password)),
+    });
+  },
+  updateRefreshToken(userId: number, refreshToken: string) {
+    return db
+      .update(users)
+      .set({ refreshToken })
+      .where(eq(users.userId, userId))
+      .returning({ userId: users.userId });
   },
 };
