@@ -31,16 +31,6 @@ describe('POST /users', () => {
     expect(rows[0].email).toBe(payload.email);
   });
 
-  it('409 중복값 삽입', async () => {
-    const payload = { email: 'test@example.com', password: 'secret12' };
-
-    await request(app).post('/users').send(payload);
-    const res = await request(app).post('/users').send(payload);
-
-    expect(res.status).toBe(409);
-    expect(res.body.success).toBe(false);
-  });
-
   it('400 필수값 미입력 (이메일)', async () => {
     const payload = { password: 'secret12' };
 
@@ -63,14 +53,12 @@ describe('POST /users', () => {
 
   it('동시에 같은 이메일 가입 → [201, 409]', async () => {
     const payload = { email: 'race@example.com', password: 'secret12' };
-
-    const [r1, r2] = await Promise.all([
-      request(app).post('/users').send(payload),
-      request(app).post('/users').send(payload),
-    ]);
-
-    const statuses = [r1.status, r2.status].sort();
-    expect(statuses).toEqual([201, 409]);
+    const arr = await Promise.all(
+      [...Array(5)].map(() => request(app).post('/users').send(payload)),
+    );
+    expect(arr.filter((r) => r.status === 201)).toHaveLength(1);
+    expect(arr.filter((r) => r.status === 409)).toHaveLength(4);
+    expect(arr.filter((r) => ![201, 409].includes(r.status))).toHaveLength(0);
   });
 
   it('이메일이 빈 문자열이면 400', async () => {

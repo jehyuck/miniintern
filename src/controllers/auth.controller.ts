@@ -22,12 +22,16 @@ type AuthContoller = {
   signin: Handler<null, UserSignInReqDto>;
 };
 export const authController = {
-  signin: (async (req, res) => {
-    const { accessToken, refreshToken } = await authService.signin(req.body);
+  signin: (async (req, res, next) => {
+    try {
+      const { accessToken, refreshToken } = await authService.signin(req.body);
 
-    res.setHeader('Authorization', `Bearer ${accessToken}`);
-    res.cookie(refreshCookieName, refreshToken, refreshCookieOpts);
+      res.setHeader('Authorization', `Bearer ${accessToken}`);
+      res.cookie(refreshCookieName, refreshToken, refreshCookieOpts);
 
-    return res.status(200).json(ok(null));
+      return res.status(200).json(ok(null));
+    } catch (error) {
+      next(error);
+    }
   }) satisfies Handler<null, UserSignInReqDto>,
 } satisfies AuthContoller;

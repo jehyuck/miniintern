@@ -1,26 +1,33 @@
-import { db } from '../db';
+import type { db } from '../db';
 import { users } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import type { Role } from '../lib/jwt';
 
-type UserRow = typeof users.$inferSelect;
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type Executor = Tx | typeof db;
+
+type LoginType = {
+  userId: number;
+  email: string;
+  password: string;
+  role: Role;
+};
 
 export const UserRepository = {
-  findById(userId: number) {
-    return db.select().from(users).where(eq(users.userId, userId)).limit(1);
-  },
-  findByEmail(email: string) {
-    return db.select().from(users).where(eq(users.email, email)).limit(1);
-  },
-  create(email: string, password: string) {
-    return db.insert(users).values({ email, password }).returning({ userId: users.userId });
-  },
-  login(email: string, password: string): Promise<UserRow | undefined> {
-    return db.query.users.findFirst({
-      where: and(eq(users.email, email), eq(users.password, password)),
+  findByEmail(ex: Executor, email: string): Promise<LoginType | undefined> {
+    return ex.query.users.findFirst({
+      where: eq(users.email, email),
+      columns: { userId: true, email: true, password: true, role: true },
     });
   },
-  updateRefreshToken(userId: number, refreshToken: string) {
-    return db
+  create(ex: Executor, email: string, hashedPassword: string) {
+    return ex
+      .insert(users)
+      .values({ email, password: hashedPassword })
+      .returning({ userId: users.userId });
+  },
+  updateRefreshToken(ex: Executor, userId: number, refreshToken: string) {
+    return ex
       .update(users)
       .set({ refreshToken })
       .where(eq(users.userId, userId))

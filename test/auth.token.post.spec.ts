@@ -6,7 +6,6 @@ import { users } from '../src/db/schema';
 import { eq } from 'drizzle-orm';
 import { sha256 } from '../src/lib/hash';
 import { getCookie } from './utils/cookie';
-
 let app: Express;
 
 const testUser = {
@@ -26,13 +25,13 @@ describe('POST /auth/token', () => {
     const res = await request(app).post('/auth/token').send(payload);
     expect(res.status).toBe(200);
 
-    expect(
-      await db
-        .select()
-        .from(users)
-        .where(eq(users.userId, testUserId))
-        .then((rows) => rows[0].refreshToken),
-    ).toBe(sha256(getCookie(res, 'refreshToken') ?? ''));
+    const refreshToken = sha256(getCookie(res, 'refreshToken') ?? '');
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.userId, testUserId))
+      .then((rows) => rows[0]);
+    expect(user.refreshToken).toBe(refreshToken);
   });
 
   it('400 이메일이 비어있음', async () => {

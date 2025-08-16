@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage"
   },
