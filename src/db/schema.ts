@@ -21,6 +21,7 @@ export const users = pgTable('users', {
   password: varchar('password', { length: 255 }).notNull(),
   role: userRole('role').notNull().default('USER'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  refreshToken: text('refresh_token'),
 });
 
 export const mclass = pgTable(
