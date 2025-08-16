@@ -4,13 +4,15 @@ import { verifyJwt, type AuthUser } from '../lib/jwt';
 
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: AuthUser;
+    user: AuthUser;
   }
 }
 
 export function authGuard(req: Request, _res: Response, next: NextFunction) {
   const h = req.headers.authorization;
-  if (!h?.startsWith('Bearer ')) throw AppError.unauthorized();
+  if (!h?.startsWith('Bearer ')) {
+    throw AppError.unauthorized('Authorization 헤더 형식이 올바르지 않습니다.');
+  }
   req.user = verifyJwt(h.slice(7));
   next();
 }

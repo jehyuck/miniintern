@@ -3,6 +3,7 @@ import jwt, {
   type VerifyOptions,
   type JwtPayload as StdJwtPayload,
 } from 'jsonwebtoken';
+import { AppError } from '../errors/appError';
 
 export type Role = 'USER' | 'ADMIN' | 'HOST';
 
@@ -56,13 +57,15 @@ export function signRefreshToken(claims: TokenClaims): string {
  */
 export function verifyJwt(token: string): AuthUser {
   const decoded = jwt.verify(token, SECRET!, VERIFY_DEFAULTS);
-  if (!decoded || typeof decoded !== 'object') throw new Error('올바르지 않은 토큰입니다.');
+  if (!decoded || typeof decoded !== 'object') {
+    throw AppError.unauthorized('토큰이 유효하지 않습니다.');
+  }
 
   const d = decoded as StdJwtPayload & Record<string, unknown>;
   const role = d.role;
-  if (typeof d.userId !== 'number') throw new Error('올바르지 않은 userId입니다.');
+  if (typeof d.userId !== 'number') throw AppError.unauthorized('토큰이 유효하지 않습니다.');
   if (role !== 'USER' && role !== 'ADMIN' && role !== 'HOST') {
-    throw new Error('올바르지 않은 역할입니다.');
+    throw AppError.unauthorized('토큰이 유효하지 않습니다.');
   }
 
   return { userId: d.userId, role };
