@@ -35,6 +35,7 @@ export const baseDoc = {
                   'NOT_FOUND',
                   'CONFLICT',
                   'INTERNAL',
+                  'NOT_IMPLEMENTED',
                 ],
                 example: 'BAD_REQUEST',
               },
@@ -54,6 +55,18 @@ export const baseDoc = {
             example: {
               success: false,
               error: { code: 'BAD_REQUEST', message: 'Bad request' },
+            },
+          },
+        },
+      },
+      NotImplemented: {
+        description: 'Not implemented',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/Error' },
+            example: {
+              success: false,
+              error: { code: 'NOT_IMPLEMENTED', message: 'Not implemented' },
             },
           },
         },

@@ -33,6 +33,8 @@ authRouter.post('/token', authController.signin);
  *    description:
  *       Refresh Token을 사용하여 새로운 Access Token을 발급받습니다.
  *       성공 시 `Authorization` 헤더에 Bearer 토큰이 포함됩니다.
+ *    responses:
+ *      '500': {$ref: '#/components/responses/NotImplemented' }
  */
 authRouter.post('/refresh', async (req, res) => {
   throw AppError.notImplemented();
@@ -47,10 +49,7 @@ authRouter.post('/refresh', async (req, res) => {
  *    description:
  *      로그아웃 API입니다. 현재 사용자의 Access Token과 Refresh Token을 무효화합니다.
  *    responses:
- *     '204':
- *      description: 로그아웃 성공
- *     '401':
- *      description: 인증되지 않은 사용자
+ *     '500': {$ref: '#/components/responses/NotImplemented' }
  * */
 authRouter.delete('/token', authGuard, async (req, res) => {
   throw AppError.notImplemented();
