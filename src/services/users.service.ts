@@ -3,6 +3,13 @@ import { AppError } from '../errors/appError';
 import type { UserSignupReqDto, UserCreatedRes } from '../dto/usersDto';
 import { db } from '../db';
 import bcrypt from 'bcrypt';
+import type { AuthUser } from '../lib/jwt';
+import { signAccessToken, signRefreshToken } from '../lib/jwt';
+import type { LoginRes } from '../dto/authDto';
+import { sha256 } from '../lib/hash';
+import type { Role } from '../lib/jwt';
+
+type JwtPrincipal = { userId: number; role: Role };
 
 export const UsersService = {
   async signUp(input: UserSignupReqDto): Promise<UserCreatedRes> {
@@ -50,7 +57,31 @@ export const UsersService = {
     await db.transaction(async (tx) => {
       await UserRepository.updatePassword(tx, userId, hashed);
     });
-
     return;
+  },
+
+  async applyHost(user: AuthUser): Promise<LoginRes> {
+    // 1) DB 기준 상태 확인 (토큰 role은 신뢰 X)
+    const me = await UserRepository.findById(db, user.userId);
+    if (!me) throw AppError.notFound('유저를 찾을 수 없습니다.');
+    if (me.role === 'HOST' || me.role === 'ADMIN') {
+      throw AppError.badRequest('이미 호스트 권한이 있습니다.');
+    }
+
+    // 해시 준비 (아직 반환 금지)
+    const nextPrincipal: JwtPrincipal = { userId: me.userId, role: 'HOST' };
+    const refreshTokenPlain = signRefreshToken(nextPrincipal); // 평문
+    const refreshHash = sha256(refreshTokenPlain); // DB 저장용 해시
+
+    // 3) 하나의 트랜잭션으로 role 변경 + RT 해시 저장
+    const updated = await db.transaction(async (tx) => {
+      const [u] = await UserRepository.updateRole(tx, me.userId, 'HOST');
+      await UserRepository.updateRefreshToken(tx, me.userId, refreshHash);
+      return u;
+    });
+
+    // 4) 커밋 성공 이후에만 새 AT/RT 발급 반환
+    const accessToken = signAccessToken(updated); // AT는 최신 role 반영
+    return { accessToken, refreshToken: refreshTokenPlain };
   },
 };

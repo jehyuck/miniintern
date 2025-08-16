@@ -56,6 +56,10 @@ export const usersDoc = {
         description: '비밀번호 변경 성공 (내용 없음)',
         content: {}, // 본문 없음
       },
+      UsersApplyHost: {
+        description: 'Host로 승격',
+        content: {}, // 본문 없음
+      },
     },
   },
 };

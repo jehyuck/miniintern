@@ -23,7 +23,7 @@ export const UserRepository = {
   findById(ex: Executor, userId: number) {
     return ex.query.users.findFirst({
       where: eq(users.userId, userId),
-      columns: { userId: true, email: true, password: true },
+      columns: { userId: true, email: true, password: true, role: true },
     });
   },
   updatePassword(ex: any, userId: number, hashed: string) {
@@ -45,5 +45,16 @@ export const UserRepository = {
       .set({ refreshToken })
       .where(eq(users.userId, userId))
       .returning({ userId: users.userId });
+  },
+  updateRole(
+    ex: Executor,
+    userId: number,
+    role: Role,
+  ): Promise<Pick<typeof users.$inferSelect, 'userId' | 'role'>[]> {
+    return ex
+      .update(users)
+      .set({ role })
+      .where(eq(users.userId, userId))
+      .returning({ userId: users.userId, role: users.role });
   },
 };
