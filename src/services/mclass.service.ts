@@ -1,6 +1,10 @@
 import { db } from '../db';
 import { MclassRepository } from '../repository/mclass.repository';
-import type { MclassCreateServiceDto } from '../dto/mclassDto';
+import {
+  toMclassResDto,
+  type MclassCreateServiceDto,
+  type MclassResListDto,
+} from '../dto/mclassDto';
 import { AppError } from '../errors/appError';
 
 export function requireDate(name: string, v: unknown): Date {
@@ -47,6 +51,13 @@ export const mclassService = {
       if (await MclassRepository.isExist(tx, dto.userId, dto.title)) throw AppError.conflict();
       const [r] = await MclassRepository.create(tx, dto);
       return r.mclassId;
+    });
+  },
+
+  async readAll(): Promise<MclassResListDto> {
+    return db.transaction(async (tx) => {
+      const dto = await MclassRepository.readAll(tx);
+      return dto.map((d) => toMclassResDto(d));
     });
   },
 };
