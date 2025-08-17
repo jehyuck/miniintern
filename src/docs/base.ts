@@ -7,7 +7,7 @@ export const baseDoc = {
     { name: 'Health', description: '헬스체크/진단' },
     { name: 'Users', description: '회원가입/내 정보/계정 관리' },
     { name: 'Auth', description: '로그인/리프래쉬 재발급/ 로그아웃' },
-    { name: 'Classes', description: '클래스 CRUD(관리자)' },
+    { name: 'Mclass', description: '클래스 CRUD(관리자)' },
     { name: 'Applications', description: '신청/취소/내 신청' },
   ],
   security: [{ bearerAuth: [] }],
