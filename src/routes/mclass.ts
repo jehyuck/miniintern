@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { AppError } from '../errors/appError';
 import { authGuard, requireHost } from '../lib/auth';
 import { mClassController } from '../controllers/mclass.controller';
 

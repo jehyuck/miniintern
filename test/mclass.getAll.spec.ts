@@ -2,7 +2,6 @@ import request from 'supertest';
 import { createApp } from '../src/app';
 import { db } from '../src/db';
 import { mclass, users } from '../src/db/schema';
-import { eq } from 'drizzle-orm';
 import type { Role } from '../src/lib/jwt';
 
 describe('MClass 읽기', () => {

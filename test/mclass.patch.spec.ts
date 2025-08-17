@@ -5,7 +5,6 @@ import { mclass } from '../src/db/schema';
 import { eq } from 'drizzle-orm';
 import { bearer, seedUser } from './utils/user.util';
 import type { MclassResListDto } from '../src/dto/mclassDto';
-import { MclassResDto } from '../src/dto/mclassDto';
 
 describe('MClass Update (PATCH /mclass)', () => {
   const app = createApp();

@@ -89,16 +89,6 @@ export const mclassService = {
     const startDate = requireDateWithUndefined('startDate', dto.startDate, true);
     const endDate = requireDateWithUndefined('endDate', dto.endDate, true);
 
-    const input = {
-      userId: dto.userId,
-      title: dto.title?.trim(),
-      description: dto.description?.trim(),
-      capacity: dto.capacity,
-      applyDeadline: applyDeadline,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
     // 유효성
     if (dto.capacity !== undefined && (!Number.isInteger(dto.capacity) || dto.capacity < 1)) {
       throw AppError.badRequest();

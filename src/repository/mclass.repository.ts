@@ -1,7 +1,7 @@
-import { and, eq, ne } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { db } from '../db';
 import { mclass } from '../db/schema';
-import type { MclassDeleteDto, MclassUpdateReqDto } from '../dto/mclassDto';
+import type { MclassDeleteDto } from '../dto/mclassDto';
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type Executor = Tx | typeof db;
@@ -77,5 +77,18 @@ export const MclassRepository = {
       .set(set)
       .where(and(...conds))
       .returning({ mclassId: mclass.mclassId });
+  },
+
+  findById(ex: Executor, mclassId: number) {
+    return ex.query.mclass.findFirst({
+      where: and(eq(mclass.mclassId, mclassId), eq(mclass.deleted, false)),
+      columns: {
+        mclassId: true,
+        capacity: true,
+        applyDeadline: true,
+        startDate: true,
+        endDate: true,
+      },
+    });
   },
 };
