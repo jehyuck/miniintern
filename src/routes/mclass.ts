@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { AppError } from '../errors/appError';
+import { authGuard, requireHost } from '../lib/auth';
+import { mClassController } from '../controllers/mclass.controller';
 
 export const mclassRouter = Router();
 
@@ -14,11 +16,9 @@ export const mclassRouter = Router();
  *     security: []
  *     requestBody:
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '200': {$ref: '#/components/responses/MclassGetAll' }
  */
-mclassRouter.get('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.get('', mClassController.readAll);
 
 /**
  * @openapi
@@ -29,28 +29,34 @@ mclassRouter.get('', async (req, res) => {
  *     description: |
  *        mclass리스트를 등록하는 api입니다. 이는 Host권한을 가진 유저만 등록 가능합니다.
  *     requestBody:
+ *        $ref: '#/components/requestBodies/MclassCreate'
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '201': {$ref: '#/components/responses/MclassCreated201'}
+ *        '400': {$ref: '#/components/responses/BadRequest'}
+ *        '401': {$ref: '#/components/responses/Unauthorized'}
+ *        '409': {$ref: '#/components/responses/Conflict'}
  */
-mclassRouter.post('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.post('', authGuard, requireHost, mClassController.create);
 
 /**
  * @openapi
  * /mclass:
  *   patch:
  *     tags: [Mclass]
- *     summary: mclass 등록
+ *     summary: mclass 수정
  *     description: |
  *        mclass리스트를 수정하는 api입니다. 이는 Host권한을 가지며, 소유권을 가진 유저만 수정 가능합니다.
  *     requestBody:
+ *        $ref: '#/components/requestBodies/MclassUpdate'
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '201':
+ *            $ref: '#/components/responses/MclassCreated201'
+ *        '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *        '404':
+ *            $ref: '#/components/responses/NotFound'
  */
-mclassRouter.patch('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.patch('', authGuard, requireHost, mClassController.update);
 
 /**
  * @openapi
@@ -61,9 +67,13 @@ mclassRouter.patch('', async (req, res) => {
  *     description: |
  *        mclass리스트를 삭제하는 api입니다. 이는 Host권한을 가지며, 소유권을 가진 유저만 삭제 가능합니다.
  *     requestBody:
+ *        $ref: '#/components/requestBodies/MclassCreate'
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '204':
+ *            $ref: '#/components/responses/MclassDelete204'
+ *        '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *        '404':
+ *            $ref: '#/components/responses/NotFound'
  */
-mclassRouter.delete('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.delete('', authGuard, requireHost, mClassController.delete);

@@ -9,8 +9,9 @@ import {
   pgEnum,
   index,
   uniqueIndex,
+  check,
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { gt, sql } from 'drizzle-orm';
 
 export const appStatus = pgEnum('application_status', ['APPLIED', 'CANCELLED']);
 export const userRole = pgEnum('user_role', ['USER', 'HOST', 'ADMIN']);
@@ -44,17 +45,9 @@ export const mclass = pgTable(
   (t) => [
     // FK 조회 성능용 (자동으로 안 생김)
     index('idx_mclass_user').on(t.userId),
-    // 필수 비즈니스 규칙
-    // sql`
-    //   ALTER TABLE "mclass"
-    //   ADD CONSTRAINT "chk_mclass_capacity_positive"
-    //   CHECK (capacity > 0)
-    // `,
-    // sql`
-    //   ALTER TABLE "mclass"
-    //   ADD CONSTRAINT "chk_mclass_time_order"
-    //   CHECK (start_date <= end_date)
-    // `,
+    uniqueIndex('userId_title_unique').on(t.userId, t.title),
+    check('chk_mclass_time_order', gt(t.endDate, t.startDate)),
+    check('chk_mclass_capacity_positive', gt(t.capacity, 0)),
   ],
 );
 
