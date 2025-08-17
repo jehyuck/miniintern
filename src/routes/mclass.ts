@@ -29,7 +29,7 @@ mclassRouter.get('', mClassController.readAll);
  *     description: |
  *        mclass리스트를 등록하는 api입니다. 이는 Host권한을 가진 유저만 등록 가능합니다.
  *     requestBody:
- *        $ref: {'#/components/requestBodies/MclassCreate'}
+ *        $ref: '#/components/requestBodies/MclassCreate'
  *     responses:
  *        '201': {$ref: '#/components/responses/MclassCreated201'}
  *        '400': {$ref: '#/components/responses/BadRequest'}
@@ -62,7 +62,13 @@ mclassRouter.patch('', async (req, res) => {
  *     description: |
  *        mclass리스트를 삭제하는 api입니다. 이는 Host권한을 가지며, 소유권을 가진 유저만 삭제 가능합니다.
  *     requestBody:
+ *        $ref: '#/components/requestBodies/MclassCreate'
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '204':
+ *            $ref: '#/components/responses/MclassDelete204'
+ *        '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *        '404':
+ *            $ref: '#/components/responses/NotFound'
  */
 mclassRouter.delete('', authGuard, requireHost, mClassController.delete);

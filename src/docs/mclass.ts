@@ -1,6 +1,20 @@
 export const mclassDoc = {
   components: {
     requestBodies: {
+      MclassDelete: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['mclassId'],
+              properties: {
+                mclassId: { type: 'integer', example: 1 },
+              },
+            },
+          },
+        },
+      },
       MclassCreate: {
         required: true,
         content: {
@@ -34,6 +48,23 @@ export const mclassDoc = {
       },
     },
     responses: {
+      MclassDelete204: {
+        description: 'No Content (삭제 성공)',
+        content: {
+          schema: {
+            type: 'object',
+            required: ['success', 'data'],
+            properties: {
+              success: { type: 'boolean', example: true },
+              data: {
+                type: 'object',
+                required: ['mclassId'],
+                properties: { mclassId: { type: 'integer', example: 1 } },
+              },
+            },
+          },
+        },
+      },
       MclassCreated201: {
         description: 'Created',
         content: {

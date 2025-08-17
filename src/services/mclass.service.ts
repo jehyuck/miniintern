@@ -1,6 +1,7 @@
 import { db } from '../db';
 import { MclassRepository } from '../repository/mclass.repository';
 import {
+  type MclassDeleteDto,
   toMclassResDto,
   type MclassCreateServiceDto,
   type MclassResListDto,
@@ -59,5 +60,16 @@ export const mclassService = {
       const dto = await MclassRepository.readAll(tx);
       return dto.map((d) => toMclassResDto(d));
     });
+  },
+  async delete(dto: MclassDeleteDto): Promise<number> {
+    const deletedMclassId = await db.transaction(async (tx) => {
+      if (await MclassRepository.isExistById(tx, dto.mclassId)) {
+        const [deltedMclass] = await MclassRepository.delete(tx, dto);
+        return deltedMclass.mclassId;
+      }
+      return false;
+    });
+    if (!deletedMclassId) throw AppError.notFound();
+    return deletedMclassId;
   },
 };

@@ -56,7 +56,14 @@ export function signRefreshToken(claims: TokenClaims): string {
  * @throws {Error} 토큰이 유효하지 않거나 claims가 올바르지 않은 경우
  */
 export function verifyJwt(token: string): AuthUser {
-  const decoded = jwt.verify(token, SECRET!, VERIFY_DEFAULTS);
+  let decoded;
+  try {
+    decoded = jwt.verify(token, SECRET!, VERIFY_DEFAULTS);
+  } catch (err: any) {
+    if (err.name === 'TokenExpiredError') throw AppError.unauthorized('token expired');
+    if (err.name === 'JsonWebTokenError') throw AppError.unauthorized('invalid token');
+    throw AppError.unauthorized('token verify failed');
+  }
   if (!decoded || typeof decoded !== 'object') {
     throw AppError.unauthorized('토큰이 유효하지 않습니다.');
   }
