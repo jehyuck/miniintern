@@ -1,6 +1,26 @@
 export const mclassDoc = {
   components: {
     requestBodies: {
+      MclassUpdate: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['mclassId'],
+              properties: {
+                mclassId: { type: 'integer', example: 1 },
+                title: { type: 'string' },
+                description: { type: 'string', nullable: true },
+                capacity: { type: 'integer', minimum: 1 },
+                applyDeadline: { type: 'string', format: 'date-time' },
+                startDate: { type: 'string', format: 'date-time' },
+                endDate: { type: 'string', format: 'date-time' },
+              },
+            },
+          },
+        },
+      },
       MclassDelete: {
         required: true,
         content: {

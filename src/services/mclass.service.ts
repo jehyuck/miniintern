@@ -1,5 +1,6 @@
 import { db } from '../db';
 import { MclassRepository } from '../repository/mclass.repository';
+import type { MclassUpdateReqDto } from '../dto/mclassDto';
 import {
   type MclassDeleteDto,
   toMclassResDto,
@@ -7,6 +8,16 @@ import {
   type MclassResListDto,
 } from '../dto/mclassDto';
 import { AppError } from '../errors/appError';
+import type { mclass } from '../db/schema';
+
+export function requireDateWithUndefined(
+  name: string,
+  v: unknown,
+  undefinedFilter?: boolean,
+): Date | undefined {
+  if (undefinedFilter === true && v === undefined) return undefined;
+  return requireDate(name, v);
+}
 
 export function requireDate(name: string, v: unknown): Date {
   if (v === undefined || v === null || v === '') {
@@ -63,7 +74,7 @@ export const mclassService = {
   },
   async delete(dto: MclassDeleteDto): Promise<number> {
     const deletedMclassId = await db.transaction(async (tx) => {
-      if (await MclassRepository.isExistById(tx, dto.mclassId)) {
+      if (await MclassRepository.isExistByIdAndUserId(tx, dto.mclassId, dto.userId)) {
         const [deltedMclass] = await MclassRepository.delete(tx, dto);
         return deltedMclass.mclassId;
       }
@@ -71,5 +82,61 @@ export const mclassService = {
     });
     if (!deletedMclassId) throw AppError.notFound();
     return deletedMclassId;
+  },
+
+  async update(dto: MclassUpdateReqDto & { userId: number }): Promise<number> {
+    const applyDeadline = requireDateWithUndefined('applyDeadline', dto.applyDeadline, true);
+    const startDate = requireDateWithUndefined('startDate', dto.startDate, true);
+    const endDate = requireDateWithUndefined('endDate', dto.endDate, true);
+
+    const input = {
+      userId: dto.userId,
+      title: dto.title?.trim(),
+      description: dto.description?.trim(),
+      capacity: dto.capacity,
+      applyDeadline: applyDeadline,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    // 유효성
+    if (dto.capacity !== undefined && (!Number.isInteger(dto.capacity) || dto.capacity < 1)) {
+      throw AppError.badRequest();
+    }
+    if (startDate && endDate && startDate > endDate) {
+      throw AppError.badRequest();
+    }
+    if (applyDeadline && startDate && applyDeadline > startDate) {
+      throw AppError.badRequest();
+    }
+
+    // set에 정의된 값만 모으기
+    const set: Partial<typeof mclass.$inferInsert> = {};
+    if (dto.title !== undefined) set.title = dto.title.trim();
+    if (dto.description !== undefined) set.description = dto.description.trim() || null; // 빈문자 → null
+    if (dto.capacity !== undefined) set.capacity = dto.capacity;
+    if (applyDeadline !== undefined) set.applyDeadline = applyDeadline;
+    if (startDate !== undefined) set.startDate = startDate;
+    if (endDate !== undefined) set.endDate = endDate;
+
+    if (Object.keys(set).length === 0) {
+      // 아무 것도 바꿀 게 없으면 204가 맞지만, 서비스 레벨에선 no-op을 404로 볼 수도 있음.
+      throw AppError.badRequest();
+    }
+
+    const updatedMclassId = await db.transaction(async (tx) => {
+      if (await MclassRepository.isExistByIdAndUserId(tx, dto.mclassId, dto.userId)) {
+        const [updatedMclass] = await MclassRepository.update(tx, {
+          mclassId: dto.mclassId,
+          ownerId: dto.userId,
+          set,
+        });
+        return updatedMclass.mclassId;
+      }
+      return false;
+    });
+
+    if (!updatedMclassId) throw AppError.notFound();
+    return updatedMclassId;
   },
 };
