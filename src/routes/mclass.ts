@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { AppError } from '../errors/appError';
+import { authGuard, requireHost } from '../lib/auth';
+import { mClassController } from '../controllers/mclass.controller';
 
 export const mclassRouter = Router();
 
@@ -29,12 +31,14 @@ mclassRouter.get('', async (req, res) => {
  *     description: |
  *        mclass리스트를 등록하는 api입니다. 이는 Host권한을 가진 유저만 등록 가능합니다.
  *     requestBody:
+ *        $ref: {'#/components/requestBodies/MclassCreate'}
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '201': {$ref: '#/components/responses/MclassCreated201'}
+ *        '400': {$ref: '#/components/responses/BadRequest'}
+ *        '401': {$ref: '#/components/responses/Unauthorized'}
+ *        '409': {$ref: '#/components/responses/Conflict'}
  */
-mclassRouter.post('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.post('', authGuard, requireHost, mClassController.create);
 
 /**
  * @openapi

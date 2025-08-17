@@ -84,4 +84,8 @@ export const UsersService = {
     const accessToken = signAccessToken(updated); // AT는 최신 role 반영
     return { accessToken, refreshToken: refreshTokenPlain };
   },
+
+  async delete(user: AuthUser) {
+    await db.transaction((tx) => UserRepository.delete(tx, user.userId));
+  },
 };

@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1754894156537,
-      "tag": "0000_jazzy_hedge_knight",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1754895650380,
-      "tag": "0001_strange_wallop",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1755322428260,
-      "tag": "0002_mysterious_the_fallen",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1755336617637,
-      "tag": "0003_daffy_infant_terrible",
+      "when": 1755394571081,
+      "tag": "0000_supreme_nighthawk",
       "breakpoints": true
     }
   ]

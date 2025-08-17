@@ -1,5 +1,5 @@
 {
-  "id": "f859e2fd-98b5-4155-ac46-7777deabff99",
+  "id": "06b5de0f-135b-4a91-a30e-0d52f33e73b9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -54,8 +54,8 @@
         }
       },
       "indexes": {
-        "application_user_id_mclass_id_index": {
-          "name": "application_user_id_mclass_id_index",
+        "uniq_active_application": {
+          "name": "uniq_active_application",
           "columns": [
             {
               "expression": "user_id",
@@ -234,6 +234,27 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "userId_title_unique": {
+          "name": "userId_title_unique",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "title",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -254,7 +275,16 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "chk_mclass_time_order": {
+          "name": "chk_mclass_time_order",
+          "value": "\"mclass\".\"end_date\" > \"mclass\".\"start_date\""
+        },
+        "chk_mclass_capacity_positive": {
+          "name": "chk_mclass_capacity_positive",
+          "value": "\"mclass\".\"capacity\" > 0"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.users": {
@@ -304,6 +334,18 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
