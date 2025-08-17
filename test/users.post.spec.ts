@@ -34,9 +34,7 @@ describe('POST /users', () => {
   it('400 필수값 미입력 (이메일)', async () => {
     const payload = { password: 'secret12' };
 
-    await request(app).post('/users').send(payload);
     const res = await request(app).post('/users').send(payload);
-
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
   });

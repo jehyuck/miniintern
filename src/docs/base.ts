@@ -59,6 +59,18 @@ export const baseDoc = {
           },
         },
       },
+      NotFound: {
+        description: 'Not found',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/Error' },
+            example: {
+              success: false,
+              error: { code: 'NOT_FOUND', message: 'Not found' },
+            },
+          },
+        },
+      },
       NotImplemented: {
         description: 'Not implemented',
         content: {

@@ -26,6 +26,15 @@ export type MclassResDto = {
 };
 export type MclassResListDto = MclassResDto[];
 
+export type MclassDeleteReqDto = {
+  mclassId: number;
+};
+
+export type MclassDeleteDto = {
+  userId: number;
+  mclassId: number;
+};
+
 export function toMclassResDto(
   r: Pick<
     MclassRow,
