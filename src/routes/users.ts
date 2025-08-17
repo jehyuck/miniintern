@@ -45,12 +45,9 @@ usersRouter.patch('/me', authGuard, usersController.patchMe);
  *     tags: [Users]
  *     summary: 회원삭제
  *     responses:
- *       '200':
- *         description: OK
+ *       '204': '#/components/responses/NoConetent'
  */
-usersRouter.delete('/me', authGuard, async (req, res) => {
-  throw AppError.notImplemented();
-});
+usersRouter.delete('/me', authGuard, usersController.delete);
 
 /**
  * @openapi

@@ -152,6 +152,10 @@ export const baseDoc = {
           },
         },
       },
+      NoContent: {
+        description: '내용 없음',
+        content: {}, // 본문 없음
+      },
     },
   },
 };

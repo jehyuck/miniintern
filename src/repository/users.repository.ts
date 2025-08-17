@@ -57,4 +57,11 @@ export const UserRepository = {
       .where(eq(users.userId, userId))
       .returning({ userId: users.userId, role: users.role });
   },
+  delete(ex: Executor, userId: number) {
+    return ex
+      .update(users)
+      .set({ deletedAt: new Date(), refreshToken: null })
+      .where(eq(users.userId, userId))
+      .returning({ userId: users.userId });
+  },
 };

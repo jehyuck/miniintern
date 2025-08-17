@@ -9,6 +9,7 @@ type UsersController = {
   signup: Handler<UserCreatedRes, UserSignupReqDto>;
   patchMe: Handler<null, UserPatchReqDto>;
   applyHost: Handler<null, LoginRes>;
+  delete: Handler<null, null>;
 };
 
 export const usersController = {
@@ -32,4 +33,10 @@ export const usersController = {
       next(error);
     }
   }) satisfies Handler<null, LoginRes>,
+
+  delete: (async (req, res) => {
+    await UsersService.delete(req.user);
+    res.clearCookie(refreshCookieName, refreshCookieOpts);
+    res.status(204).json(ok(null));
+  }) satisfies Handler<null, null>,
 } satisfies UsersController;

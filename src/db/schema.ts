@@ -22,6 +22,7 @@ export const users = pgTable('users', {
   role: userRole('role').notNull().default('USER'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   refreshToken: text('refresh_token'),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
 });
 
 export const mclass = pgTable(
