@@ -1,7 +1,7 @@
 import { and, eq, ne } from 'drizzle-orm';
 import type { db } from '../db';
 import { mclass } from '../db/schema';
-import type { MclassDeleteDto } from '../dto/mclassDto';
+import type { MclassDeleteDto, MclassUpdateReqDto } from '../dto/mclassDto';
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type Executor = Tx | typeof db;
@@ -25,10 +25,11 @@ export const MclassRepository = {
     });
     return !!row;
   },
-  async isExistById(ex: Executor, mclassId: number): Promise<boolean> {
+  async isExistByIdAndUserId(ex: Executor, mclassId: number, userId: number): Promise<boolean> {
     const row = await ex.query.mclass.findFirst({
       where: and(
         eq(mclass.mclassId, mclassId),
+        eq(mclass.userId, userId),
         eq(mclass.deleted, false), // 소프트 삭제 제외
       ),
       columns: { mclassId: true }, // 최소 컬럼만
@@ -56,6 +57,25 @@ export const MclassRepository = {
       .update(mclass)
       .set({ deleted: true })
       .where(and(eq(mclass.mclassId, input.mclassId), eq(mclass.deleted, false)))
+      .returning({ mclassId: mclass.mclassId });
+  },
+
+  update(
+    ex: Executor,
+    input: { mclassId: number; ownerId?: number; set: Partial<typeof mclass.$inferInsert> },
+  ) {
+    const conds = [eq(mclass.mclassId, input.mclassId), eq(mclass.deleted, false)];
+    if (input.ownerId !== undefined) conds.push(eq(mclass.userId, input.ownerId));
+
+    const set: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(input.set)) {
+      if (v !== undefined) set[k] = v;
+    }
+
+    return ex
+      .update(mclass)
+      .set(set)
+      .where(and(...conds))
       .returning({ mclassId: mclass.mclassId });
   },
 };

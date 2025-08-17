@@ -30,6 +30,16 @@ export type MclassDeleteReqDto = {
   mclassId: number;
 };
 
+export type MclassUpdateReqDto = {
+  mclassId: number;
+  title?: string;
+  description?: string;
+  capacity?: number;
+  applyDeadline?: string;
+  startDate?: string;
+  endDate?: string;
+};
+
 export type MclassDeleteDto = {
   userId: number;
   mclassId: number;

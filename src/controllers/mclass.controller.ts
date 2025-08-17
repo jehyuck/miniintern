@@ -1,4 +1,9 @@
-import type { MclassCreateReqDto, MclassDeleteReqDto, MclassResListDto } from '../dto/mclassDto';
+import type {
+  MclassCreateReqDto,
+  MclassDeleteReqDto,
+  MclassResListDto,
+  MclassUpdateReqDto,
+} from '../dto/mclassDto';
 import { mclassService } from '../services/mclass.service';
 import type { Handler } from '../utils/http';
 import { ok } from '../utils/response';
@@ -7,6 +12,7 @@ type MclassController = {
   create: Handler<number, MclassCreateReqDto>;
   readAll: Handler<MclassResListDto, null>;
   delete: Handler<number, MclassDeleteReqDto>;
+  update: Handler<number, MclassUpdateReqDto>;
 };
 
 export const mClassController = {
@@ -28,4 +34,9 @@ export const mClassController = {
 
     res.status(204).json(ok(deletedId));
   }) satisfies Handler<number, MclassDeleteReqDto>,
+
+  update: (async (req, res) => {
+    const updatedMclassId = await mclassService.update({ ...req.body, userId: req.user.userId });
+    res.status(201).json(ok(updatedMclassId));
+  }) satisfies Handler<number, MclassUpdateReqDto>,
 } satisfies MclassController;
