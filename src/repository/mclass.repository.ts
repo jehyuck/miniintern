@@ -91,4 +91,18 @@ export const MclassRepository = {
       },
     });
   },
+
+  async lockByIdForUpdate(ex: Executor, mclassId: number) {
+    return await ex
+      .select({
+        mclassId: mclass.mclassId,
+        capacity: mclass.capacity,
+        applyDeadline: mclass.applyDeadline,
+        deleted: mclass.deleted,
+      })
+      .from(mclass)
+      .where(eq(mclass.mclassId, mclassId))
+      .limit(1)
+      .for('update');
+  },
 };

@@ -8,7 +8,10 @@ if (!process.env.DATABASE_URL) {
   throw new Error('Missing DATABASE_URL');
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: Number(process.env.PG_POOL_MAX ?? 50),
+});
 export const db = drizzle(pool, { schema });
 
 export async function ping(): Promise<Date> {

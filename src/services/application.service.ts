@@ -7,12 +7,12 @@ import { MclassRepository } from '../repository/mclass.repository';
 export const applicationService = {
   async apply(userId: number, mclassId: number): Promise<number> {
     const appId = await db.transaction(async (tx) => {
-      const target = await MclassRepository.findById(tx, mclassId);
+      const [target] = await MclassRepository.lockByIdForUpdate(tx, mclassId);
 
       if (target === undefined) throw AppError.notFound();
       // 2) 마감 확인
       const now = new Date();
-      if (now > new Date(target.applyDeadline)) {
+      if (now > target.applyDeadline) {
         throw AppError.conflict();
       }
 
