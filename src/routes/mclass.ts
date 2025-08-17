@@ -16,11 +16,9 @@ export const mclassRouter = Router();
  *     security: []
  *     requestBody:
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
+ *        '200': {$ref: '#/components/responses/MclassGetAll' }
  */
-mclassRouter.get('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.get('', mClassController.readAll);
 
 /**
  * @openapi
@@ -45,12 +43,11 @@ mclassRouter.post('', authGuard, requireHost, mClassController.create);
  * /mclass:
  *   patch:
  *     tags: [Mclass]
- *     summary: mclass 등록
+ *     summary: mclass 수정
  *     description: |
  *        mclass리스트를 수정하는 api입니다. 이는 Host권한을 가지며, 소유권을 가진 유저만 수정 가능합니다.
  *     requestBody:
  *     responses:
- *        '500': {$ref: '#/components/responses/NotImplemented' }
  */
 mclassRouter.patch('', async (req, res) => {
   throw AppError.notImplemented();
@@ -68,6 +65,4 @@ mclassRouter.patch('', async (req, res) => {
  *     responses:
  *        '500': {$ref: '#/components/responses/NotImplemented' }
  */
-mclassRouter.delete('', async (req, res) => {
-  throw AppError.notImplemented();
-});
+mclassRouter.delete('', authGuard, requireHost, mClassController.delete);

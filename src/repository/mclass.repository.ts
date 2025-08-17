@@ -1,4 +1,4 @@
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import type { db } from '../db';
 import { mclass } from '../db/schema';
 
@@ -8,7 +8,7 @@ type Executor = Tx | typeof db;
 export const MclassRepository = {
   create(
     ex: Executor,
-    input: Omit<typeof mclass.$inferInsert, 'classId' | 'createdAt' | 'updatedAt' | 'deletedAt'>,
+    input: Omit<typeof mclass.$inferInsert, 'classId' | 'createdAt' | 'deleted'>,
   ) {
     return ex.insert(mclass).values(input).returning({ mclassId: mclass.mclassId });
   },
@@ -23,5 +23,20 @@ export const MclassRepository = {
       columns: { mclassId: true }, // 최소 컬럼만
     });
     return !!row;
+  },
+
+  readAll(ex: Executor) {
+    return ex
+      .select({
+        mclassId: mclass.mclassId,
+        title: mclass.title,
+        description: mclass.description,
+        capacity: mclass.capacity,
+        applyDeadline: mclass.applyDeadline,
+        startDate: mclass.startDate,
+        endDate: mclass.endDate,
+      })
+      .from(mclass)
+      .where(eq(mclass.deleted, false));
   },
 };
