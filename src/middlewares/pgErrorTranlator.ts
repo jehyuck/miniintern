@@ -37,7 +37,6 @@ export function translatePgError(e: unknown): AppError | null {
     case '22P02': // invalid_text_representation (예: 잘못된 날짜/숫자 형식)
       return AppError.badRequest('입력 형식이 올바르지 않습니다.');
     default:
-      console.log('데이터베이스 에러' + err);
       return AppError.internal('데이터베이스 오류가 발생했습니다.');
   }
 }

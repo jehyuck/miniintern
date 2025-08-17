@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { createApp } from '../src/app';
 import { db } from '../src/db';
-import { mclass, users } from '../src/db/schema';
+import { mclass } from '../src/db/schema';
 import { eq } from 'drizzle-orm';
 import { bearer, seedUser } from './utils/user.util';
 

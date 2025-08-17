@@ -5,6 +5,7 @@ import { usersRouter } from './routes/users';
 import { errorHandler } from './errors/errorHandler';
 import { authRouter } from './routes/auth';
 import { mclassRouter } from './routes/mclass';
+import { applicationRouter } from './routes/application';
 
 let swaggerSpec: any | undefined;
 try {
@@ -27,6 +28,8 @@ export function createApp(): express.Express {
   app.use('/users', usersRouter);
 
   app.use('/mclass', mclassRouter);
+
+  app.use('/applications', applicationRouter);
 
   app.use(errorHandler);
   return app;

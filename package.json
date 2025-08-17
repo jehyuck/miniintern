@@ -14,7 +14,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
-    "test": "jest --runInBand",
+    "test": "npm run test:normal && npm run test:concurrency",
+    "test:normal": "jest --runInBand --testPathIgnorePatterns=apply.concurrent.spec.ts",
+    "test:concurrency": "jest --detectOpenHandles test/apply.concurrent.spec.ts",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage"
   },
