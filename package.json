@@ -1,0 +1,77 @@
+{
+  "name": "mclass-backend",
+  "version": "1.0.0",
+  "description": "M클래스 신청 시스템 백엔드",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "ts-node-dev --transpile-only src/server.ts",
+    "build": "tsc",
+    "db:gen": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:ping": "ts-node -r dotenv/config --transpile-only src/db/dbPing.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "test": "npm run test:normal && npm run test:concurrency",
+    "test:normal": "jest --runInBand --testPathIgnorePatterns=apply.concurrent.spec.ts",
+    "test:concurrency": "jest --detectOpenHandles test/apply.concurrent.spec.ts",
+    "test:watch": "jest --watch",
+    "coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jehyuck/miniintern.git"
+  },
+  "keywords": [
+    "express",
+    "typescript",
+    "jwt",
+    "backend"
+  ],
+  "author": "jehyeok <wpgur07@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jehyuck/miniintern/issues"
+  },
+  "homepage": "https://github.com/jehyuck/miniintern#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "lodash.merge": "^4.6.2",
+    "pg": "^8.16.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/lodash.merge": "^4.6.9",
+    "@types/node": "^24.2.1",
+    "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.33.0",
+    "jest": "^30.0.5",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
